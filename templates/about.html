@@ -3,190 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us - Online Learning System</title>
+    <title>About LearnPro - Your Career Path Guide</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: 'Arial', sans-serif;
         }
         .profile-icon {
-      width: 25px;
-      height: 25px;
-      border-radius: 50%;
-      cursor: pointer;
-    }
-    .navbar-nav .nav-link { 
-      font-size: 1.2rem; 
-      margin-right: 1rem; 
-      color: #343a40 !important; 
-    }
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #4F46E5;
+        }
+        .navbar-nav .nav-link { 
+            font-size: 1.2rem; 
+            margin-right: 1rem; 
+            color: #343a40 !important; 
+        }
         .navbar-brand {
             font-size: 1.75rem;
             font-weight: bold;
+            color: #4F46E5 !important;
         }
         .about-section {
             padding: 4rem 0;
-            background-color: #f4f4f4;
-            box-shadow: 0 4px 8px rgba(0, 0, 0,0.1);
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         .features-icon {
             font-size: 50px;
-            color: #007bff;
-          }
-          .feature-section {
-            padding: 50px 0;
-          }
+            color: #4F46E5;
+            margin-bottom: 1.5rem;
+        }
         .about-title {
             font-size: 2.5rem;
             font-weight: bold;
             text-align: center;
             margin-bottom: 2rem;
-            color:#007bff;
+            color: #4F46E5;
         }
-        .feature {
-            margin-bottom: 1.5rem;
-            padding: 50px 0; 
-            background-color: #f9f9f9;
+        .feature-section {
+            padding: 50px 0;
+            background-color: #ffffff;
         }
-        .feature h4 {
-            font-size: 1.25rem;
-            font-weight: bold;
-            color:#007bff;
-
-        }
-        .features-icon { 
-          font-size: 50px; 
-          color: #007bff; 
-          margin-bottom: 1rem;
-        }
-        .feature p {
-            font-size: 1rem;
-            color: #555;
-        }
-        .chart-container {
-            width: 100%; /* Full width of the section */
-        }
-        .chart-card {
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        .feature-card {
             padding: 2rem;
-            margin-bottom: 2rem;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            height: 100%;
         }
-        .chart {
-            max-width: 300px; /* Adjusting the chart size */
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        .feature-card h3 {
+            color: #4F46E5;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
         }
         .chart-section {
             padding: 50px 0;
-          }
+            background-color: #f8f9fa;
+        }
+        .stats-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">LearnPro</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="/compete">Practice<span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/courses">Courses</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/about">About Us</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/games">Relax</a>
-        </li>
-        {% if session.get('logged_in') %}
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <img src="/static/images/profile.jpeg" alt="Profile" class="profile-icon">
-          </a>
-          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
-            <a class="dropdown-item" href="/profile">My Profile</a>
-            <a class="dropdown-item" href="/logout">Logout</a>
-          </div>
-        </li>
-        {% endif %}
-        {% if not session.get('logged_in') %}
-        <li class="nav-item">
-          <a class="nav-link" href="/sign">Login</a>
-        </li>
-        {% endif %}
-      </ul>
-    </div>
-  </nav>
-  
-    <!-- About Section -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#"><i class="fas fa-graduation-cap"></i> LearnPro</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/"><i class="fas fa-home"></i> Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/compete"><i class="fas fa-tasks"></i> Practice</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/courses"><i class="fas fa-book"></i> Courses</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/about"><i class="fas fa-info-circle"></i> About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/games"><i class="fas fa-gamepad"></i> Relax</a>
+                </li>
+                {% if session.get('logged_in') %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" data-toggle="dropdown">
+                        <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=random" alt="Profile" class="profile-icon">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="/profile"><i class="fas fa-user"></i> My Profile</a>
+                        <a class="dropdown-item" href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/sign"><i class="fas fa-sign-in-alt"></i> Login</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
     <div class="about-section">
         <div class="container">
-            <h2 class="about-title">About Our Online Learning System</h2>
-            <p class="text-center mb-4">Our online learning system is designed to provide users with seamless access to a variety of programming courses. We focus on user experience, ease of navigation, and flexibility to learn at your own pace.</p>
+            <h2 class="about-title">Discover Your Career Path with LearnPro</h2>
+            <p class="text-center mb-4 lead">LearnPro is your comprehensive career guidance platform, helping you explore different career paths, gain industry-relevant skills, and connect with mentors to build your future.</p>
         </div>
+    </div>
+
     <section class="feature-section">
         <div class="container">
-          <div class="row text-center">
-            <div class="col-md-4">
-              <div class="features-icon">
-                <i class="bi bi-people-fill"></i>
-              </div>
-              <h3>User-Friendly Interface</h3>
-              <p>Our platform is designed with simplicity in mind, making it easy for learners to navigate and find the courses they need.</p>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="feature-card">
+                        <div class="features-icon">
+                            <i class="fas fa-road"></i>
+                        </div>
+                        <h3>Career Path Guidance</h3>
+                        <p>Explore various career paths with detailed roadmaps, skill requirements, and growth opportunities in different industries.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-card">
+                        <div class="features-icon">
+                            <i class="fas fa-laptop-code"></i>
+                        </div>
+                        <h3>Hands-on Learning</h3>
+                        <p>Practice with real-world projects and exercises that simulate actual work scenarios in your chosen career path.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-card">
+                        <div class="features-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Community Support</h3>
+                        <p>Connect with mentors and peers who are on similar career paths, share experiences, and grow together.</p>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-4">
-              <div class="features-icon">
-                <i class="bi bi-bar-chart-line"></i>
-              </div>
-              <h3>Responsive Design</h3>
-              <p>Our platform is fully responsive, meaning you can access it from any device—be it desktop, tablet, or mobile—without compromising the experience.</p>
-            </div>
-            <div class="col-md-4">
-              <div class="features-icon">
-                <i class="bi bi-globe"></i>
-              </div>
-              <h3>Course Variety</h3>
-              <p>We offer a wide range of courses covering popular programming languages, each designed by experts to provide a deep understanding of the subject.</p>
-            </div>
-          </div>
         </div>
-      </section>
+    </section>
+
     <section class="chart-section">
         <div class="container">
-          <div class="row">
-            <div class="col-lg-6">
-              <canvas id="chart"></canvas>
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <canvas id="chart"></canvas>
+                </div>
+                <div class="col-lg-6">
+                    <div class="stats-card">
+                        <h3>Platform Impact</h3>
+                        <p>LearnPro has helped thousands of learners find their ideal career paths through:</p>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check-circle text-success mr-2"></i> Personalized career guidance</li>
+                            <li><i class="fas fa-check-circle text-success mr-2"></i> Industry-aligned skill development</li>
+                            <li><i class="fas fa-check-circle text-success mr-2"></i> Practical learning experiences</li>
+                            <li><i class="fas fa-check-circle text-success mr-2"></i> Mentor-guided development</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-6">
-              <h3>Feature Implementation Overview</h3>
-              <p>The key features of our online learning system have been carefully implemented to provide the best learning experience for users. The interface is highly user-friendly with 90% implementation, and the course variety is well-rounded at 85%. Responsive design ensures accessibility at 95%, while progress tracking offers learners a seamless experience, achieving 80% completion.</p>
-            </div>
-          </div>
         </div>
-      </section>
-      <footer class="text-center mt-4 mb-4" id="footer">
-        <p>&copy; 2024 LearnPro. All Rights Reserved.</p>
-      </footer>
+    </section>
+
+    <footer class="text-center py-4 bg-light">
+        <p class="mb-0">&copy; 2024 LearnPro. All Rights Reserved.</p>
+    </footer>
+
     <script>
         const ctx = document.getElementById('chart').getContext('2d');
         const chart = new Chart(ctx, {
-            type: 'line',
+            type: 'bar',
             data: {
-                labels: ['User Interface', 'Course Variety', 'Responsive Design', 'Progress Tracking'],
+                labels: ['Career Guidance', 'Skill Development', 'Practical Projects', 'Mentorship'],
                 datasets: [{
-                    label: 'Implementation Percentage',
-                    data: [45, 20, 25, 15],  // Adjust your data here
-                    backgroundColor: ['#007bff', '#28a745', '#ffc107', '#dc3545'],
-                    borderWidth: 2
+                    label: 'User Success Rate',
+                    data: [85, 90, 88, 92],
+                    backgroundColor: '#4F46E5',
+                    borderColor: '#4F46E5',
+                    borderWidth: 1
                 }]
             },
             options: {
-                responsive:true
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
             }
         });
     </script>

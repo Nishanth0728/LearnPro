@@ -133,11 +133,13 @@ def dashboard():
     
     logged_in = session.get('logged_in', False)
     cur = mysql.connection.cursor()
+    username = session.get('username')
     cur.execute("SELECT course_name, description, image_url FROM courses LIMIT 3")
     courses = cur.fetchall()
     cur.execute("SELECT name, description, image_url FROM career_paths LIMIT 6")
     career_paths = cur.fetchall()
-    
+    cur.execute("SELECT username, email, created_at FROM users WHERE username = %s", (username,))
+    user = cur.fetchone()
     cur.close()
 
     courses_dict = [
@@ -148,7 +150,9 @@ def dashboard():
         {'name': path[0], 'description': path[1], 'image_url': path[2]}
         for path in career_paths
     ]
-    return render_template('dashboard.html', logged_in=logged_in, courses=courses_dict, career_paths=career_paths_dict)
+    user_dict = {'username': user[0], 'email': user[1], 'created_at': user[2]}
+    
+    return render_template('dashboard.html', user=user_dict, logged_in=logged_in, courses=courses_dict, career_paths=career_paths_dict)
 
 
 @app.route('/sign', methods=['GET', 'POST'])
@@ -668,7 +672,16 @@ def change_password():
     return redirect(url_for('profile'))
 @app.route('/about',methods=['GET','POST'])
 def about():
-    return render_template('about.html')
+    check_login()
+    if not session.get('logged_in'):
+        return redirect(url_for('sign'))
+    cur = mysql.connection.cursor()
+    username = session.get('username')
+    cur.execute("SELECT username, email, created_at FROM users WHERE username = %s", (username,))
+    user = cur.fetchone()
+    cur.close()
+    user_dict = {'username': user[0], 'email': user[1], 'created_at': user[2]}
+    return render_template('about.html',user=user_dict)
 # Logout route
 @app.route('/logout')
 def logout():
