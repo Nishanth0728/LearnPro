@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LearnPro - Your Future Starts Here</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animate-fadeIn {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans min-h-screen flex flex-col">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16 items-center">
+                <a href="/" class="text-2xl font-bold text-blue-600">LearnPro</a>
+                <div class="flex items-center space-x-6">
+                    <a href="/" class="text-gray-700 hover:text-blue-600 transition-colors">Home</a>
+                    <a href="/explore" class="text-gray-700 hover:text-blue-600 transition-colors">Explore Careers</a>
+                    <a href="/courses" class="text-gray-700 hover:text-blue-600 transition-colors">Learning Paths</a>
+                    <a href="/about" class="text-gray-700 hover:text-blue-600 transition-colors">About</a>
+
+                    {% if session.get('logged_in') %}
+                        <a href="{{ url_for('dashboard') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">Dashboard</a>
+                    {% else %}
+                        <a href="{{ url_for('sign') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">Sign In</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative h-[600px] flex items-center justify-center animate-fadeIn">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80"
+                 class="w-full h-full object-cover"
+                 alt="Hero Background">
+            <div class="absolute inset-0 bg-black opacity-50"></div>
+        </div>
+        <div class="relative z-10 text-center text-white px-4">
+            <h1 class="text-5xl font-bold mb-6">Find Your Perfect Career Path</h1>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">Explore different careers, gain industry-relevant skills, and connect with mentors to build your future.</p>
+            
+            {% if session.get('logged_in') %}
+                <a href="{{ url_for('dashboard') }}" class="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors">Go to Dashboard</a>
+            {% else %}
+                <a href="{{ url_for('sign') }}" class="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors">Explore Careers</a>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Career Paths Section -->
+    <section id="career-paths" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">Choose Your Career Path</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for path in career_paths %}
+                <div class="career-card bg-white rounded-xl shadow-lg overflow-hidden">
+                    {% if path.image_url %}
+                    <img src="{{ path.image_url }}" class="w-full h-48 object-cover" alt="{{ path.name }}">
+                    {% endif %}
+                    <div class="p-6 text-center">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">{{ path.name }}</h3>
+                        <p class="text-gray-600">{{ path.description }}</p>
+                        <a href="/sign" 
+                           class="text-blue-600 hover:text-blue-800 mt-4 inline-block">Learn More →</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    
+
+    <!-- Career Path Features Section -->
+<section id="features" class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12">Why Choose Our LearnPro?</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="text-center p-6">
+                <svg class="w-12 h-12 text-blue-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+                <h3 class="text-xl font-bold mb-2">Comprehensive Curriculum</h3>
+                <p class="text-gray-600">Access a well-rounded curriculum designed to cover all essential skills and knowledge for your career growth.</p>
+            </div>
+            <div class="text-center p-6">
+                <svg class="w-12 h-12 text-blue-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                <h3 class="text-xl font-bold mb-2">Personalized Learning</h3>
+                <p class="text-gray-600">Enjoy tailored learning experiences that adapt to your pace and career goals.</p>
+            </div>
+            <div class="text-center p-6">
+                <svg class="w-12 h-12 text-blue-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <h3 class="text-xl font-bold mb-2">Career Support</h3>
+                <p class="text-gray-600">Get access to career counseling, job placement assistance, and networking opportunities.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p>&copy; {{ year }} CareerPath. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Smooth Scrolling -->
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

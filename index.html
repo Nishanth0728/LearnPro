@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jigsaw Puzzle</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .game-container {
+            margin-top: 20px;
+        }
+
+        #grid {
+            display: grid;
+            gap: 5px;
+            margin-top: 20px;
+        }
+
+        .tile {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 1.5em;
+            font-weight: bold;
+            border: 1px solid #333;
+            cursor: pointer;
+        }
+
+        .tile.empty {
+            background-color: #ddd;
+            cursor: default;
+        }
+
+        select, button {
+            padding: 10px;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Jigsaw Puzzle</h1>
+    <div>
+        <label for="grid-size">Select Grid Size: </label>
+        <select id="grid-size">
+            <option value="9">9 Grids (3x3)</option>
+            <option value="16">16 Grids (4x4)</option>
+            <option value="25">25 Grids (5x5)</option>
+        </select>
+        <button onclick="startGame()">Start Game</button>
+    </div>
+
+    <div class="game-container">
+        <div id="grid"></div>
+    </div>
+
+    <script>
+        const grid = document.getElementById('grid');
+        let gridSize = 9; // default 3x3 grid
+
+        // Function to start or reset the game
+        function startGame() {
+            gridSize = parseInt(document.getElementById('grid-size').value);
+            const rows = Math.ceil(gridSize / 5);
+            const cols = Math.ceil(gridSize / rows);
+
+            grid.style.gridTemplateRows = `repeat(${rows}, 80px)`;
+            grid.style.gridTemplateColumns = `repeat(${cols}, 80px)`;
+
+            const tiles = Array.from({ length: gridSize - 1 }, (_, i) => i + 1);
+            tiles.push(''); // Add an empty space
+
+            shuffle(tiles); // Shuffle the tiles
+
+            grid.innerHTML = '';
+
+            tiles.forEach((tile, index) => {
+                const tileDiv = document.createElement('div');
+                tileDiv.classList.add('tile');
+                if (tile === '') {
+                    tileDiv.classList.add('empty');
+                } else {
+                    tileDiv.textContent = tile;
+                    tileDiv.addEventListener('click', () => moveTile(index));
+                }
+                grid.appendChild(tileDiv);
+            });
+        }
+
+        // Shuffle function to randomize tiles
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // Move tile on click
+        function moveTile(index) {
+            const tiles = Array.from(grid.children);
+            const emptyIndex = tiles.findIndex(tile => tile.classList.contains('empty'));
+            const rowSize = grid.style.gridTemplateColumns.split(' ').length;
+
+            // Check if the clicked tile is adjacent to the empty tile
+            if (
+                index === emptyIndex - 1 && emptyIndex % rowSize !== 0 || // Left
+                index === emptyIndex + 1 && (emptyIndex + 1) % rowSize !== 0 || // Right
+                index === emptyIndex - rowSize || // Above
+                index === emptyIndex + rowSize // Below
+            ) {
+                // Swap tiles
+                const emptyTile = tiles[emptyIndex];
+                const clickedTile = tiles[index];
+
+                emptyTile.textContent = clickedTile.textContent;
+                emptyTile.classList.remove('empty');
+
+                clickedTile.textContent = '';
+                clickedTile.classList.add('empty');
+            }
+        }
+
+        // Keyboard control for arrow keys
+        document.addEventListener('keydown', (e) => {
+            const tiles = Array.from(grid.children);
+            const emptyTile = tiles.find(tile => tile.classList.contains('empty'));
+            const emptyIndex = tiles.indexOf(emptyTile);
+            const rowSize = grid.style.gridTemplateColumns.split(' ').length;
+
+            let targetIndex = -1;
+
+            switch (e.key) {
+                case 'ArrowUp':
+                    targetIndex = emptyIndex - rowSize;
+                    break;
+                case 'ArrowDown':
+                    targetIndex = emptyIndex + rowSize;
+                    break;
+                case 'ArrowLeft':
+                    targetIndex = emptyIndex - 1;
+                    break;
+                case 'ArrowRight':
+                    targetIndex = emptyIndex + 1;
+                    break;
+                default:
+                    break;
+            }
+
+            // Move only if target index is valid and adjacent to the empty space
+            if (targetIndex >= 0 && targetIndex < gridSize && isValidMove(emptyIndex, targetIndex, rowSize)) {
+                moveTiles(emptyIndex, targetIndex);
+            }
+        });
+
+        // Validate if the move is valid based on adjacency
+        function isValidMove(emptyIndex, targetIndex, rowSize) {
+            return (
+                targetIndex === emptyIndex - 1 && emptyIndex % rowSize !== 0 || // Left
+                targetIndex === emptyIndex + 1 && (emptyIndex + 1) % rowSize !== 0 || // Right
+                targetIndex === emptyIndex - rowSize || // Above
+                targetIndex === emptyIndex + rowSize // Below
+            );
+        }
+
+        // Swap tiles and update the game grid
+        function moveTiles(fromIndex, toIndex) {
+            const tiles = Array.from(grid.children);
+            const tileToMove = tiles[toIndex];
+
+            tiles[fromIndex].textContent = tileToMove.textContent;
+            tiles[fromIndex].classList.remove('empty');
+
+            tileToMove.textContent = '';
+            tileToMove.classList.add('empty');
+        }
+
+        startGame(); // Initialize the game on page load
+    </script>
+</body>
+</html>
