@@ -1345,6 +1345,29 @@ projects = {
     }
 }
 
+@app.route('/projects/<career_name>')
+def projects_page(career_name):
+    cur = mysql.connection.cursor()
+
+    # Fetch career details
+    cur.execute("SELECT * FROM career_paths WHERE name = %s", (career_name,))
+    career = cur.fetchone()
+    
+    if not career:
+        return "Career Path Not Found", 404
+
+    # Fetch projects related to the career
+    cur.execute("SELECT title, description, link FROM career_projects WHERE career_id = %s", (career[0],))
+    projects = cur.fetchall()
+
+    project_list = [{'title': p[0], 'description': p[1], 'link': p[2]} for p in projects]
+
+    cur.close()
+
+    return render_template("projects.html", career_name=career_name, projects=project_list)
+
+
+
 @app.route('/project/<course_name>')
 def project(course_name):
     # Your function logic here
