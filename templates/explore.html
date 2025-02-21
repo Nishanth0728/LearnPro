@@ -219,9 +219,17 @@
                             </div>
                             <div class="modal-body">
                                 <h6 class="font-weight-bold mb-3">Career Overview</h6>
-                                <p>{{ career.description }}</p>
+                                <p>{{ career.descript }}</p>
+                                <h4> </h4>
+                                
+                                
                             </div>
                             <div class="modal-footer">
+                                <a href="{{ url_for('career_det', career_name=career.name|replace(' ', '_')) }}" class="btn btn-primary roadmap-btn">
+                                    Details
+                                </a>
+                                
+                                
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
@@ -238,5 +246,8 @@
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="2QSTuTGuEh6ki5uwMMPbc";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
+    </script>
 </body>
 </html>

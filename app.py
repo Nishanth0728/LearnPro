@@ -28,7 +28,7 @@ mysql = MySQL(app)
 
 otp_storage = {} 
 
-TIMER_DURATION = 6000  
+TIMER_DURATION = 600  
 COOLDOWN_DURATION = 10
 
 def send_otp_email(email, otp):
@@ -250,20 +250,39 @@ def course_detail():
 @app.route('/career/<career_name>')
 def career_det(career_name):
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM career_paths WHERE name = %s", (career_name,))
+    
+    # Convert underscores to spaces for database query
+    career_name = career_name.replace('_', ' ')
+
+    # Fetch career details (case insensitive)
+    cur.execute("SELECT * FROM career_paths WHERE LOWER(name) = LOWER(%s)", (career_name,))
     career = cur.fetchone()
-    cur.close()
 
     if not career:
         return "Career Path Not Found", 404
 
     career_dict = {
-        'name': career[1],  # Assuming 1st index is 'name'
-        'description': career[2],  # 2nd index is 'description'
-        'image_url': career[3]  # 3rd index is 'image_url'
+        'name': career[1],
+        'description': career[2],
+        'image_url': career[3],
+        'descript': career[5]
     }
 
-    return render_template("career_detail.html", career=career_dict)
+    # Fetch roadmap steps
+    cur.execute("""
+        SELECT step_number, title, description FROM career_roadmaps
+        WHERE career_id = %s ORDER BY step_number ASC
+    """, (career[0],))
+    roadmap_steps = cur.fetchall()
+    
+    # Convert steps into a list of dictionaries
+    roadmap_list = [{'step_number': step[0], 'title': step[1], 'description': step[2]} for step in roadmap_steps]
+
+    cur.close()
+
+    return render_template("career_detail.html", career=career_dict, roadmap=roadmap_list)
+
+
 
 
 @app.route('/enroll/<course_name>', methods=['POST'])
@@ -335,7 +354,7 @@ def explore():
     user = cur.fetchone()
     
     # Fetch career paths
-    cur.execute("SELECT name, description, image_url FROM career_paths")
+    cur.execute("SELECT name, description, image_url, descript FROM career_paths")
     career_paths = cur.fetchall()
     cur.close()
 
@@ -346,7 +365,9 @@ def explore():
         {
             'name': path[0],
             'description': path[1],
-            'image_url': path[2]
+            'image_url': path[2],
+            'descript': path[3]
+            
         }
         for path in career_paths
     ]
@@ -1377,7 +1398,7 @@ def games_page():
             # Cooldown expired; reset the session and allow gameplay
             session.pop('cooldown_start', None)
             session.pop('timer_start', None)
-            return render_template('games.html')  # Allow access to games.html
+            return render_template('games.html', user=user_dict)  # Allow access to games.html
         else:
             remaining_cooldown = COOLDOWN_DURATION - cooldown_elapsed
             minutes, seconds = divmod(remaining_cooldown, 60)
