@@ -1474,9 +1474,7 @@ def memory_game():
     return render_template('memory_game.html')
 
 
-if __name__ == '__main__':
-    try:
-        app.run(debug=True)
-    except KeyboardInterrupt:
-        print("Shutting down server...")
-        os.kill(os.getpid(), signal.SIGINT)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))  # Default to 10000 if no env variable
+    app.run(host="0.0.0.0", port=port)
+
